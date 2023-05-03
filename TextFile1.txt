@@ -1,0 +1,36 @@
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDbBFlFhWdVt1x3dkI9FXsVsCFisXDQeRPU2H0CXBK5J2Jr95gn1pTlUR8owX2dKhMmgtA5KeiqQ6hsV2y2kOn3TfY1gRchDkW3B5rQnLk4QUTcRDMAs3i0zvBzBj+4D/seIGUxPhEOWPyn69EG3yoHPkpcBR9dxwpsY29rPkzjdzSHEHbDxIegJOvmfCgcFxCNxglh421SELl1EXrj85YRx8UMB9V0GDHtOaGszzNlFE48tWsTDCco5yc0zf+Q8ySkxMKv73TxGZEfUpHb9yC2zZPSkHTVl0oxnoBj7bvHEOtiAG0STU9VKBXsD7xIvnrHOAqRd0OTIwzr7oo6vvPv90LLje5SH2yiisC+wxeXY07D8Sk3iQ5umOKJ4xOuJ+kfl9OzL7R2i18X2ST9Sw4Inp0HDjFQiQf4CcnzLv5qdKrY4TiekYE9HEUfZoN2Nr/WN2fL7gemlhKz3/UJ48U8qmgL+1cZ1GrJJekzc+Saw3dse5E+79T6FyI6MykIWWs= astryd@ajw
+
+
+
+
+**** Set up your Raspberry Pi Zero as a USB HID device ****
+
+		## Connect your Raspberry Pi Zero to your computer via USB.
+
+		## Install the "libcomposite" package by running the following command in the terminal:
+
+
+sudo apt-get update && sudo apt-get install libcomposite -y
+cd /sys/kernel/config/usb_gadget/
+sudo mkdir -p myusbkeyboard/functions/hid.usb0
+cd myusbkeyboard/functions/hid.usb0
+echo "05 01 09 06 A1 01 05 07 19 E0 29 E7 15 00 25 01 75 01 95 08 81 02 95 01 75 08 81 01 95 05 75 01 05 08 19 01 29 05 91 02 95 01 75 03 91 01 95 06 75 08 15 00 25 65 05 07 19 00 29 65 81 00 09 05 15 00 25 65 05 07 19 00 29 65 81 00 C0
+" >> report_desc
+sudo echo "HID_DEVICE" >> dev
+cd /sys/kernel/config/usb_gadget/myusbkeyboard/
+sudo echo "0x1d6b" > idVendor
+sudo echo "0x0002" > idProduct
+sudo mkdir -p strings/0x409
+sudo echo "00000000eb5bca12" > strings/0x409/serialnumber
+echo "dtoverlay=dwc2" >> /boot/config.txt
+
+
+		## Create a new file called cmdline.txt by running the following command: 
+		
+sudo nano /boot/cmdline.txt. 
+
+		## in text file, end of the line of the file, seperate with a space and enter modules-load=dwc2,g_ether
+		## save file.
+
+echo "dwc2" >> /etc/modules
+echo "g_serial" >> /etc/modules
